@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>    
+    <section>
+        <h1>Autores</h1>
+        <ul id="autores"></ul>
+    </section>
+
+    <section>
+        <h2>Publicação</h2>
+        <form>
+            <label for="title">Titulo</label>
+            <input id="titulo" type="text" name="title"> <br>
+
+            <label for="descricao">Descrição</label>
+            <input type="text" id="descricao" name="descricao">
+
+            <input type="submit" value="Publicar" onclick="cadastrarUsuario(event);">
+        </form>
+    </section>
+
+    <script>
+        const ul = document.getElementById('autores'); // const ul = <ul id="autores"></>
+        const url = 'https://jsonplaceholder.typicode.com/users';
+
+        fetch(url, { method: 'GET' }).then(response => {
+           return response.json();
+        }).then(data => {
+           let autores = data;
+
+           autores.map(function(autor, index) {
+            let li = document.createElement('li'); // let li = <li> </li>
+            let nome = document.createElement('h2'); // let nome = <h2> </h2>
+            let email = document.createElement('p'); // let email = <p> </p>
+
+            nome.innerHTML = `${autor.name}`; // nome = <h2>Juliana</h2>
+            email.innerHTML = `${autor.email}`; // email = <p> email@gmail.com </p>
+
+            li.appendChild(nome); // <li> <h2>Juliana</h2> </li>
+            li.appendChild(email); // <li> <h2>Juliana</h2> <p> email@gmail.com </p> </li>
+            ul.appendChild(li) // <ul> <li> <h2>Juliana</h2> <p> email@gmail.com </p> </li> </ul>
+           })
+        }).catch(function(erro){
+            console.log(erro);
+        });
+
+        function cadastrarUsuario(event) {
+            event.preventDefault();
+            const apiUrl = 'https://jsonplaceholder.typicode.com/posts';
+            const titleValue = document.getElementById('titulo').value;
+            const descriptionValue = document.getElementById('descricao').value;
+            
+            const publicacao = {
+                title: titleValue,
+                body: descriptionValue,
+                userId: 1
+            }
+
+            fetch(apiUrl, { method: 'POST', body: JSON.stringify(publicacao) })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.log(error));
+        }
+
+        
+    </script>
+</body>
+</html>
